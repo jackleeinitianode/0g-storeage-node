@@ -71,12 +71,18 @@ function start-storage-node() {
 	pm2 start ../target/release/zgs_node -- --config config.toml
 }
 
+function stop-storage-node() {
+	# stop pm2
+	pm2 delete zgs_node 
+}
+
 function menu() {
     while true; do
         echo "########Twitter: @jleeinitianode########"
         echo "1. Install 0g storage node"
-		echo "2. start storage node"
-        echo "3. Exit"
+		echo "2. start pm2 / storage node"
+		echo "3. stop pm2 / storage node"
+        echo "4. Exit"
         echo "#############################################################"
         read -p "Select function: " choice
         case $choice in
@@ -86,14 +92,16 @@ function menu() {
 		2)
 			start-storage-node
 			;;		
-        3)
+		3)
+			stop-storage-node
+			;;		
+        4)
             break
             ;;
         *)
             echo "choice function again"
             ;;
         esac
-        read -p "Press any key to contiune..."
     done
 }
 
