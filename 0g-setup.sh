@@ -71,7 +71,7 @@ function install-0g-storage-node() {
 function menu() {
     while true; do
         echo "########Twitter: @jleeinitianode########"
-        echo "1. Install initia Node"
+        echo "1. Install 0g storage node"
         echo "2. Exit"
         echo "#############################################################"
         read -p "Select function: " choice
