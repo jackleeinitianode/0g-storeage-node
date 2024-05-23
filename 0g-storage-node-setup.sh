@@ -9,20 +9,40 @@ fi
 
 # Function to install environment
 function install_environment() {
-    # 1. System updates, installation of required environments
+   
+   # 1. System updates, installation of required environments
     sudo apt-get update
     sudo apt-get install clang cmake build-essential
     sudo apt-get install git
-    sudo apt-get install npm
-
+	
+    if command -v npm > /dev/null 2>&1; then
+        echo "npm installed"
+    else
+        echo "Installing npm..."
+        sudo apt-get install -y npm
+    fi
+	
+	
     # 2. Install go (If it is the same node as the validator node, you can PASS)
-    wget https://go.dev/dl/go1.22.0.linux-amd64.tar.gz
-    sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.22.0.linux-amd64.tar.gz
-    export PATH=$PATH:/usr/local/go/bin
-    
+    if command -v go > /dev/null 2>&1; then
+        echo "Go installed"
+    else
+        echo "Installing Go..."
+		wget https://go.dev/dl/go1.22.0.linux-amd64.tar.gz
+		sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.22.0.linux-amd64.tar.gz
+		export PATH=$PATH:/usr/local/go/bin
+    fi
+	
+
     # 3. Install pm2
-    npm install -g pm2
+    if command -v pm2 > /dev/null 2>&1; then
+        echo "PM2 installed"
+    else
+        echo "Installing PM2..."
+        npm install pm2@latest -g
+    fi
     
+	
     # 4. Install rustup (When the selection for 1, 2, or 3 appears, just press Enter.)
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     
@@ -87,7 +107,7 @@ function show-log-storage-node(){
 # Function to remove 0g storage node
 function remove-storage-node(){
     cd
-    pm2 delete zgs_node 
+	pm2 delete zgs_node
     rm -r -f 0g-storage-node
 }
 
