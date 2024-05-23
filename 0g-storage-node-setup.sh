@@ -44,8 +44,17 @@ function install_environment() {
     
 	
     # 4. Install rustup (When the selection for 1, 2, or 3 appears, just press Enter.)
+    if ! command -v cargo &>/dev/null; then
+        echo "Installing rust and cargo"
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        source $HOME/.cargo/env
+    else
+        echo "rust & cargo installed"
+    fi
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     
+	
+	
     # 5. Git clone
     git clone -b v0.2.0 https://github.com/0glabs/0g-storage-node.git
 
