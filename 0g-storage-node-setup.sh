@@ -99,6 +99,7 @@ function start-storage-node() {
     cd
     cd 0g-storage-node/run/
     pm2 start ../target/release/zgs_node -- --config config.toml
+
 }
 
 # Function to stop 0g storage node
@@ -115,9 +116,8 @@ function show-log-storage-node(){
 
 # Function to remove 0g storage node
 function remove-storage-node(){
-    cd
 	pm2 delete zgs_node
-    rm -r -f 0g-storage-node
+    rm -r -f $HOME/0g-storage-node
 }
 
 # Main menu function
