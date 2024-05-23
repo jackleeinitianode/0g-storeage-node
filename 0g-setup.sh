@@ -63,7 +63,7 @@ function install_environment() {
 }
 
 
-function install_initia() {
+function install-0g-storage-node() {
     install_environment
 }
 
@@ -77,7 +77,7 @@ function menu() {
         read -p "Select function: " choice
         case $choice in
         1)
-            install_initia
+            install-0g-storage-node
             ;;
         2)
             break
