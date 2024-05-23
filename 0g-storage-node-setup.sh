@@ -87,7 +87,7 @@ function show-log-storage-node(){
 # Function to remove 0g storage node
 function remove-storage-node(){
     cd
-	stop-storage-node
+    pm2 delete zgs_node 
     rm -r -f 0g-storage-node
 }
 
