@@ -41,7 +41,12 @@ function install_environment() {
 	source ~/.bash_profile
 	echo -e "ZGS_LOG_DIR: $ZGS_LOG_DIR\nZGS_LOG_CONFIG_FILE: $ZGS_LOG_CONFIG_FILE\nLOG_CONTRACT_ADDRESS: $LOG_CONTRACT_ADDRESS\nMINE_CONTRACT: $MINE_CONTRACT"
 	
-	# 8. Update your config.toml
+	
+	# 8. type and store your private key
+	read -p "Enter your private key: " PRIVATE_KEY && echo
+	sed -i 's|miner_key = ""|miner_key = "'"$PRIVATE_KEY"'"|' $HOME/0g-storage-node/run/config.toml
+	
+	# 9. Update your config.toml
 	sed -i 's|# log_config_file = "log_config"|log_config_file = "'"$ZGS_LOG_CONFIG_FILE"'"|' $HOME/0g-storage-node/run/config.toml
 	sed -i 's|# log_directory = "log"|log_directory = "'"$ZGS_LOG_DIR"'"|' $HOME/0g-storage-node/run/config.toml
 	sed -i 's|mine_contract_address = ".*"|mine_contract_address = "'"$MINE_CONTRACT"'"|' $HOME/0g-storage-node/run/config.toml
@@ -58,11 +63,6 @@ function install-0g-storage-node() {
     install_environment
 }
 
-function setup-key() {
-	# type and store your private key
-	read -sp "Enter your private key: " PRIVATE_KEY && echo
-	sed -i 's|miner_key = ""|miner_key = "'"$PRIVATE_KEY"'"|' $HOME/0g-storage-node/run/config.toml
-}
 
 function start-storage-node() {
 	# start pm2
@@ -75,9 +75,8 @@ function menu() {
     while true; do
         echo "########Twitter: @jleeinitianode########"
         echo "1. Install 0g storage node"
-		echo "2. Setup private key"
-		echo "3. start storage node"
-        echo "4. Exit"
+		echo "2. start storage node"
+        echo "3. Exit"
         echo "#############################################################"
         read -p "Select function: " choice
         case $choice in
@@ -85,12 +84,9 @@ function menu() {
             install-0g-storage-node
             ;;
 		2)
-			setup-key
-			;;
-		3)
 			start-storage-node
 			;;		
-        4)
+        3)
             break
             ;;
         *)
