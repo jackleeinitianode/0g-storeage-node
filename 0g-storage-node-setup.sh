@@ -121,8 +121,8 @@ function menu() {
     while true; do
 		echo "##############################################################################"
 		echo "##############################################################################"
-        echo "########  Twitter: @jleeinitianode                                    ########"
-		echo "########  Buy me a coffee To:                                         ########"
+                echo "########  Twitter: @jleeinitianode                                    ########"
+		echo "########  Buy me a coffee ?                                           ########"
 		echo "########  evm:   0x9b738d96a2654eef7a32ef14d1569bf90e792b39           ########"
 		echo "########  sol:   64Jt9FfP24g4jKkWmFGjBWDaGB79j7VW57jRPpoLwZhR         ########"
 		echo "##############################################################################"
@@ -134,7 +134,7 @@ function menu() {
         echo "4. Show log pm2 / 0g storage node"
         echo "5. Remove 0g storage node"
         echo "6. Exit"
-        echo "#############################################################"
+        echo "##############################################################################"
         read -p "Select function: " choice
         case $choice in
         1)
