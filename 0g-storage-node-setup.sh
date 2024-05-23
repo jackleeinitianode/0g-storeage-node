@@ -164,16 +164,3 @@ function menu() {
 
 # Call the menu function
 menu
-
-
-
-
-sudo systemctl disable zgs && \
-sudo systemctl stop zgs && \
-sudo systemctl daemon-reload 
-
-
-
-
-SNAPSHOT_FILE="initia_20240523.tar.lz4"
-initiad tendermint unsafe-reset-all --home $HOME/.initia --keep-addr-book
