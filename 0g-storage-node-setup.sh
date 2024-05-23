@@ -35,12 +35,12 @@ function install_environment() {
 	
 
     # 3. Install pm2
-    # if command -v pm2 > /dev/null 2>&1; then
-    #    echo "PM2 installed"
-    # else
-    #    echo "Installing PM2..."
-    #    npm install pm2@latest -g
-    # fi
+    if command -v pm2 > /dev/null 2>&1; then
+        echo "PM2 installed"
+    else
+        echo "Installing PM2..."
+        npm install pm2@latest -g
+    fi
     
 	
     # 4. Install rustup (When the selection for 1, 2, or 3 appears, just press Enter.)
@@ -86,25 +86,6 @@ function install_environment() {
     sed -i 's|# network_libp2p_port = 1234|network_libp2p_port = 1234|' $HOME/0g-storage-node/run/config.toml
     sed -i 's|network_boot_nodes = \["/ip4/54.219.26.22/udp/1234/p2p/16Uiu2HAmPxGNWu9eVAQPJww79J32pTJLKGcpjRMb4Qb8xxKkyuG1","/ip4/52.52.127.117/udp/1234/p2p/16Uiu2HAm93Hd5azfhkGBbkx1zero3nYHvfjQYM2NtiW4R3r5bE2g"\]|network_boot_nodes = \["/ip4/54.219.26.22/udp/1234/p2p/16Uiu2HAmTVDGNhkHD98zDnJxQWu3i1FL1aFYeh9wiQTNu4pDCgps","/ip4/52.52.127.117/udp/1234/p2p/16Uiu2HAkzRjxK2gorngB1Xq84qDrT4hSVznYDHj6BkbaE4SGx9oS"\]|' $HOME/0g-storage-node/run/config.toml
     sed -i 's|# db_dir = "db"|db_dir = "db"|' $HOME/0g-storage-node/run/config.toml
-	
-	
-	# 10. create services
-	sudo tee /etc/systemd/system/zgs.service > /dev/null <<EOF
-	[Unit]
-	Description=ZGS Node
-	After=network.target
-
-	[Service]
-	User=root
-	WorkingDirectory=$HOME/0g-storage-node/run
-	ExecStart=$HOME/0g-storage-node/target/release/zgs_node --config $HOME/0g-storage-node/run/config.toml
-	Restart=on-failure
-	RestartSec=10
-	LimitNOFILE=65535
-
-	[Install]
-	WantedBy=multi-user.target
-	EOF
 }
 
 # Function to install 0g storage node
@@ -112,29 +93,47 @@ function install-0g-storage-node() {
     install_environment
 }
 
-
 # Function to start 0g storage node
 function start-storage-node() {
-	sudo systemctl daemon-reload && \
-	sudo systemctl enable zgs && \
-	sudo systemctl start zgs
+    # Start pm2
+    pm2 start $HOME/0g-storage-node/target/release/zgs_node -- --config $HOME/0g-storage-node/run/config.toml
+}
 
+# Function to stop 0g storage node
+function stop-storage-node() {
+    # Stop pm2
+    pm2 delete zgs_node 
 }
 
 # Function to show logs of 0g storage node
 function show-log-storage-node(){
-	tail -f "$(ls -t $HOME/0g-storage-node/run/log/* | head -n1)"
+    tail -f "$(ls -t $HOME/0g-storage-node/run/log/* | head -n1)"
 }
 
+# Function to remove 0g storage node
+function remove-storage-node(){
+	pm2 delete zgs_node
+    rm -r -f $HOME/0g-storage-node
+}
 
 # Main menu function
 function menu() {
     while true; do
-        echo "########Twitter: @jleeinitianode########"
+		echo "##############################################################################"
+		echo "##############################################################################"
+        echo "########  Twitter: @jleeinitianode                                    ########"
+		echo "########  Buy me a coffee To:                                         ########"
+		echo "########  evm:   0x9b738d96a2654eef7a32ef14d1569bf90e792b39           ########"
+		echo "########  sol:   64Jt9FfP24g4jKkWmFGjBWDaGB79j7VW57jRPpoLwZhR         ########"
+		echo "##############################################################################"
+		echo "##############################################################################"
+		echo ""
         echo "1. Install 0g storage node"
-        echo "2. Start 0g storage node"
-		echo "3. Show logs 0g storage node"
-        echo "4. Exit"
+        echo "2. Start pm2 / 0g storage node"
+        echo "3. Stop pm2 / 0g storage node"
+        echo "4. Show log pm2 / 0g storage node"
+        echo "5. Remove 0g storage node"
+        echo "6. Exit"
         echo "#############################################################"
         read -p "Select function: " choice
         case $choice in
@@ -143,10 +142,16 @@ function menu() {
             ;;
         2)
             start-storage-node
-            ;;          
+            ;;      
         3)
+            stop-storage-node
+            ;;      
+        4)
             show-log-storage-node
-            ;;           
+            ;;      
+        5)
+            remove-storage-node
+            ;;      
         6)
             break
             ;;
@@ -159,3 +164,16 @@ function menu() {
 
 # Call the menu function
 menu
+
+
+
+
+sudo systemctl disable zgs && \
+sudo systemctl stop zgs && \
+sudo systemctl daemon-reload 
+
+
+
+
+SNAPSHOT_FILE="initia_20240523.tar.lz4"
+initiad tendermint unsafe-reset-all --home $HOME/.initia --keep-addr-book
