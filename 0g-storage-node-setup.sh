@@ -87,7 +87,8 @@ function show-log-storage-node(){
 # Function to remove 0g storage node
 function remove-storage-node(){
     cd
-    rm -r -f 0g-start-storage-node
+	stop-storage-node
+    rm -r -f 0g-storage-node
 }
 
 # Main menu function
